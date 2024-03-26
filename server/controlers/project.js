@@ -8,6 +8,7 @@ import Project from "../models/project.js";
 const router = Router();
 const uploadFn = upload.single('picture')
 
+// get all projects
 router.get('/', async (req,resp) =>{
   try {
     resp.status(200).json(await Project.find().populate('author',['name','surname','party_name']))
@@ -15,7 +16,7 @@ router.get('/', async (req,resp) =>{
     resp.status(500).json(err);
   }
 })
-
+// create new project
 router.post('/', async (req, resp) => {
   uploadFn(req, resp, async (err) => {
     if (err instanceof multer.MulterError) return resp.status(406).json(err.message)
