@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Header from './components/header/Header'
-import Home from './pages/Home'
+import Home from './pages/Home.jsx'
+import SingleProject from './pages/SingleProject.jsx'
+
 
 function App() {
 
@@ -11,6 +13,7 @@ function App() {
         <Header />
         <Routes>
           <Route path='/pagrindinis' element={<Home/>} />
+          <Route path='/projektas/:id' element={<SingleProject/>} />
         </Routes>
       </BrowserRouter>
 
