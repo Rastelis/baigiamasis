@@ -6,7 +6,7 @@ export default function Header() {
     <header className=''>
       <div>
         <div>User Name</div>
-        <i class="bi bi-gear-fill"></i>
+        <i className="bi bi-gear-fill"></i>
       </div>
       <nav>
         <button className='btn btn-primary'>Teikti Nauja Projekta</button>
