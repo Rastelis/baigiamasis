@@ -1,0 +1,10 @@
+.projects {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.home_background {
+  background-color: rgb(215, 215, 215);
+  padding: 20px 0;
+}

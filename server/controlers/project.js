@@ -16,6 +16,16 @@ router.get('/', async (req,resp) =>{
     resp.status(500).json(err);
   }
 })
+
+// get single project by _id
+router.get('/projektas/:id', async (req,resp) =>{
+  try {
+    resp.status(200).json(await Project.findById(req.params.id).populate('author',['name','surname','party_name']))
+  } catch (err) {
+    resp.status(500).json(err);
+  }
+})
+
 // create new project
 router.post('/', async (req, resp) => {
   uploadFn(req, resp, async (err) => {
