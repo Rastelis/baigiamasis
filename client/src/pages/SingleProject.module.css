@@ -8,3 +8,15 @@
 .project_wraper td {
   vertical-align: middle;
 }
+
+.change_status {
+  padding: 5px 10px;
+  text-align: center;
+  line-height: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.change_status:hover {
+  background-color: #424649!important;
+}
