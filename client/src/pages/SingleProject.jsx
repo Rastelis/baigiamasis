@@ -3,23 +3,27 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom";
 
 import Status from "../components/status/Status.jsx";
-import DateFormat from "../components/date_format/DateFormat.jsx";
 import style from './SingleProject.module.css'
+import ChangeStatus from "../components/change_status/ChangeStatus.jsx";
 
 
 export default function SingleProject() {
-
+  const [showChangeStatus, setShowChangeStatus] = useState(false)
   const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
   const { id } = useParams()
 
 
   useEffect(() => {
-    console.log(id);
+    if (showChangeStatus) return;
+
     axios.get('http://localhost:3000/projektas/' + id)
       .then(resp => {
         setData(resp.data)
       })
-  }, [])
+      console.log("update")
+  }, [(showChangeStatus)])
+
 
   return data && (
     <div className={'container ' + style.project_wraper}>
@@ -33,7 +37,15 @@ export default function SingleProject() {
           </tr>
           <tr>
             <td><strong>Projekto statusas:</strong></td>
-            <td><Status data={data.status} /></td>
+            <td>
+              <Status data={data.status} />
+              <span
+                className={
+                  "bg-dark text-light " + style.change_status
+                }
+                onClick={() => setShowChangeStatus(true)}>Keisti Statusa
+              </span>
+            </td>
           </tr>
           <tr>
             <td><strong>Projekto nuotrauka:</strong></td>
@@ -41,11 +53,11 @@ export default function SingleProject() {
           </tr>
           <tr>
             <td><strong>Projekto sukūrimo data:</strong></td>
-            <td><DateFormat data={data.created_at} /></td>
+            <td>{new Date(data.created_at).toLocaleDateString()}</td>
           </tr>
           <tr>
             <td><strong>Projekto svarstymo data:</strong></td>
-            <td><DateFormat data={data.hearing_at} /></td>
+            <td>{new Date(data.hearing_at).toLocaleDateString} </td>
           </tr>
           <tr>
             <td><strong>Projekto aprašymas:</strong></td>
@@ -66,6 +78,12 @@ export default function SingleProject() {
           </tr>
         </tbody>
       </table>
+      {showChangeStatus &&
+        <ChangeStatus
+        setShowChangeStatus={setShowChangeStatus} 
+        id={id}
+        />
+      }
     </div>
   )
 }
