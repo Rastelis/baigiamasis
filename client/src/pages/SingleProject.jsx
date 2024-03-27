@@ -10,7 +10,7 @@ import ChangeStatus from "../components/change_status/ChangeStatus.jsx";
 export default function SingleProject() {
   const [showChangeStatus, setShowChangeStatus] = useState(false)
   const [data, setData] = useState();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const { id } = useParams()
 
 
@@ -57,7 +57,7 @@ export default function SingleProject() {
           </tr>
           <tr>
             <td><strong>Projekto svarstymo data:</strong></td>
-            <td>{new Date(data.hearing_at).toLocaleDateString} </td>
+            <td>{new Date(data.hearing_at).toLocaleDateString()} </td>
           </tr>
           <tr>
             <td><strong>Projekto aprašymas:</strong></td>
