@@ -12,7 +12,7 @@ export default function Status({ data }) {
       statusType = "bg-danger";
       break;
     case "Priimtas":
-      statusType = "bg-succes";
+      statusType = "bg-success";
       break;
     default:
       statusType = "bg-secondary";
