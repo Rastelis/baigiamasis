@@ -13,6 +13,7 @@ const Project = model('project', new Schema({
   description: {
     type: String,
     maxLength: [2000, 'Aprašymas yra per ilgas, aprašymas negali būti ilgesnis nei 2000 simbolių'],
+    required: [true, 'Projekto aprašymas yra privalomas']
   },
   created_at: {
     type: Date,
