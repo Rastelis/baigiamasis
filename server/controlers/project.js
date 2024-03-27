@@ -9,18 +9,18 @@ const router = Router();
 const uploadFn = upload.single('picture')
 
 // get all projects
-router.get('/', async (req,resp) =>{
+router.get('/', async (req, resp) => {
   try {
-    resp.status(200).json(await Project.find().populate('author',['name','surname','party_name']))
+    resp.status(200).json(await Project.find().populate('author', ['name', 'surname', 'party_name']))
   } catch (err) {
     resp.status(500).json(err);
   }
 })
 
 // get single project by _id
-router.get('/projektas/:id', async (req,resp) =>{
+router.get('/projektas/:id', async (req, resp) => {
   try {
-    resp.status(200).json(await Project.findById(req.params.id).populate('author',['name','surname','party_name']))
+    resp.status(200).json(await Project.findById(req.params.id).populate('author', ['name', 'surname', 'party_name']))
   } catch (err) {
     resp.status(500).json(err);
   }
@@ -33,7 +33,7 @@ router.post('/', async (req, resp) => {
     else if (err === 'format') return resp.status(406).json('Netinkamas nuotraukos formatas, leidžiami nutraukų formatai: jpg/jpeg, png')
 
     if (req.file) req.body.picture = req.file.filename;
-    
+
     try {
       await Project.create(req.body);
       resp.status(200).json('Projektas sekmingai įkeltas');
@@ -43,6 +43,23 @@ router.post('/', async (req, resp) => {
     }
   })
 })
+
+// update project
+router.put('/:id', async (req, resp) => {
+  uploadFn(req, resp, async (err) => {
+    if (err instanceof multer.MulterError) return resp.status(406).json(err.message)
+    else if (err === 'format') return resp.status(406).json('Netinkamas nuotraukos formatas, leidžiami nutraukų formatai: jpg/jpeg, png')
+
+    if (req.file) req.body.picture = req.file.filename;
+
+    try {
+      await Project.updateOne(req.body)
+      resp.status(200).json('Statusas sekmingai pakeistas');
+    } catch (err) {
+      resp.status(500).json(err);
+    }
+  });
+});
 
 export default router;
 
