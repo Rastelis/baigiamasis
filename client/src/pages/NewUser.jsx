@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import style from './NewProject.module.css';
 import axios from 'axios';
 
-export default function NewProject() {
+export default function NewUser() {
 
   const navigate = useNavigate();
   const [message, setMessage] = useState();
@@ -13,8 +12,8 @@ export default function NewProject() {
     e.preventDefault();
     const formData = new FormData(e.target);
     formData.append('author', '66016a3f4607f71f6b4f2a87')//temporary solution
-    axios.post('http://localhost:3000', formData)
-      .then(resp => navigate('/pagrindinis'))
+    axios.post('http://localhost:3000/vartotojai', formData)
+      .then(resp => navigate('/vartotojai'))
       .catch(err => setMessage(err.response.data))
 
   };
@@ -24,9 +23,9 @@ export default function NewProject() {
       <div className="container">
         <div>
           <form
-            className={"mt-5 " + style.project_form}
+            className="mt-5 "
             onSubmit={handleSubmit}
-            id="new_project"
+            id="new_user"
           >
             {
               message &&
@@ -35,67 +34,75 @@ export default function NewProject() {
             <div className="mb-3">
               <label
                 className="form-label"
-                htmlFor="project_name"
+                htmlFor="name"
               >
-                Projekto pavadinimas
+                Vardas
               </label>
               <input
                 className="form-control"
                 type="text"
-                name="project_name"
-                id="project_name"
+                name="name"
+                id="name"
               />
-              {/* <div className='form-text'>Projekto pavadinimas yra privalomas ir negali buti ilgesnis nei 80 simbolių.</div> */}
             </div>
             <div className="mb-3">
               <label
                 className="form-label"
-                htmlFor="description"
-              >Projekto aprašymas
-              </label>
-              <textarea
-                className="form-control"
-                name="description"
-                id="description"
-                rows="30"
-              >
-              </textarea>
-              {/* <div className='form-text'>Projekto aprašymas yra privalomas ir negali būti ilgesnis nei 2000 simbolių.</div> */}
-            </div>
-            <div className='mb-3'>
-              <label
-                className='form-labelw'
-                htmlFor="hearing_at"
-              >Svarstymo data
+                htmlFor="surname"
+              >Pavardė
               </label>
               <input
-                className='form-control'
-                type='date'
-                name='hearing_at'
-                id='hearing_at'
+                className="form-control"
+                type='text'
+                name="surname"
+                id="surname"
               />
-            {/* <div className='form-text'>svarstymo data turi būti nurodyta.</div> */}
             </div>
             <div className="mb-3">
               <label
                 className="form-label"
-                htmlFor="picture"
-              >
-                Projekto nuotrauka
+                htmlFor="party_name"
+              >Partija
               </label>
               <input
                 className="form-control"
-                type="file"
-                name="picture"
-                id="picture"
+                type='text'
+                name="party_name"
+                id="party_name"
               />
-            {/* <div className='form-text'>Įkelti nuotrauką yra privaloma</div> */}
+            </div>
+            <div className="mb-3">
+              <label
+                className="form-label"
+                htmlFor="email"
+              >el. paštas
+              </label>
+              <input
+                className="form-control"
+                type='email'
+                name="email"
+                id="email"
+              />
+            </div>
+            <div className="mb-3">
+              <label
+                className="form-label"
+                htmlFor="password"
+              >Slaptažodis
+              </label>
+              <input
+                className="form-control"
+                type='password'
+                name="password"
+                id="password"
+              />
+              <div className='form-text'>Slaptažodis turi turėti bent po vieną didžiaja ir mažają raides, skaičiu ir simbolį (#?!@$ %^&*-.+=) taip pat negali būti trumpesnis nei 8 simboliai.</div>
             </div>
           </form>
           <button
             className="btn btn-primary"
             type="submit"
-            form="new_project"
+            form="new_user"
           >
             Teikti
           </button>

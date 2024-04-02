@@ -1,32 +1,39 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import style from './NewProject.module.css';
-import axios from 'axios';
+
 
 export default function NewProject() {
 
   const navigate = useNavigate();
   const [message, setMessage] = useState();
+  const [data, setData] = useState();
+  const { id } = useParams()
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/projektas/' + id)
+      .then(resp => setData(resp.data))
+      .catch(err => console.log(err.message))
+  }, [])
 
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    formData.append('author', '66016a3f4607f71f6b4f2a87')//temporary solution
-    axios.post('http://localhost:3000', formData)
+    axios.put('http://localhost:3000/' + id, formData)
       .then(resp => navigate('/pagrindinis'))
       .catch(err => setMessage(err.response.data))
-
   };
 
-  return (
+  return data && (
     <div>
       <div className="container">
         <div>
           <form
             className={"mt-5 " + style.project_form}
             onSubmit={handleSubmit}
-            id="new_project"
+            id="edit_project"
           >
             {
               message &&
@@ -44,6 +51,7 @@ export default function NewProject() {
                 type="text"
                 name="project_name"
                 id="project_name"
+                defaultValue={data.project_name}
               />
               {/* <div className='form-text'>Projekto pavadinimas yra privalomas ir negali buti ilgesnis nei 80 simbolių.</div> */}
             </div>
@@ -58,6 +66,7 @@ export default function NewProject() {
                 name="description"
                 id="description"
                 rows="30"
+                defaultValue={data.description}
               >
               </textarea>
               {/* <div className='form-text'>Projekto aprašymas yra privalomas ir negali būti ilgesnis nei 2000 simbolių.</div> */}
@@ -73,8 +82,9 @@ export default function NewProject() {
                 type='date'
                 name='hearing_at'
                 id='hearing_at'
+                defaultValue={new Date(data.hearing_at).toLocaleDateString('lt-LT')}
               />
-            {/* <div className='form-text'>svarstymo data turi būti nurodyta.</div> */}
+              {/* <div className='form-text'>svarstymo data turi būti nurodyta.</div> */}
             </div>
             <div className="mb-3">
               <label
@@ -89,13 +99,13 @@ export default function NewProject() {
                 name="picture"
                 id="picture"
               />
-            {/* <div className='form-text'>Įkelti nuotrauką yra privaloma</div> */}
+              {/* <div className='form-text'>Įkelti nuotrauką yra privaloma</div> */}
             </div>
           </form>
           <button
             className="btn btn-primary"
             type="submit"
-            form="new_project"
+            form="edit_project"
           >
             Teikti
           </button>

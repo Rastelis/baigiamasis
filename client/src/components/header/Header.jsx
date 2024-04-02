@@ -10,7 +10,7 @@ export default function Header() {
     <header className=''>
       <div className={'d-flex gap-3 ' + style.user}>
         <div><i className="bi bi-person-circle"></i> User Name</div>
-        <div
+        {/* <div
           className={style.settings}
           onClick={() => setShowMenu(true)}
         >
@@ -31,8 +31,7 @@ export default function Header() {
               </div>
             </div>
           }
-        </div>
-      </div>
+        </div> */}
       <nav className='d-flex gap-3'>
         <button
           className='btn btn-primary'
@@ -41,10 +40,17 @@ export default function Header() {
           <i className="bi bi-house-fill"></i> Pagrindinis</button>
         <button
           className='btn btn-primary'
-          onClick={()=>navigate('/naujas-projektas')}
+          onClick={() => navigate('/naujas-projektas')}
         >
           Teikti Nauja Projekta</button>
+        <button
+        className='btn btn-primary'
+        onClick={()=> navigate('/vartotojai')}
+        >
+          Tvarkyti vartotojus
+        </button>
       </nav>
+      </div>
     </header>
   )
 }

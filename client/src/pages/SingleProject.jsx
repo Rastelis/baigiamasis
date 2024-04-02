@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Status from "../components/status/Status.jsx";
 import style from './SingleProject.module.css'
@@ -10,6 +10,7 @@ import ChangeStatus from "../components/change_status/ChangeStatus.jsx";
 export default function SingleProject() {
   const [showChangeStatus, setShowChangeStatus] = useState(false)
   const [data, setData] = useState();
+  const navigate = useNavigate();
   // const [loading, setLoading] = useState(false);
   const { id } = useParams()
 
@@ -18,15 +19,36 @@ export default function SingleProject() {
     if (showChangeStatus) return;
 
     axios.get('http://localhost:3000/projektas/' + id)
-      .then(resp => {
-        setData(resp.data)
-      })
-      console.log("update")
-  }, [(showChangeStatus)])
+      .then(resp => setData(resp.data))
+      .catch(err => console.log(err.message))
+  }, [showChangeStatus])
 
+  function handleDelete() {
+    if (window.confirm(`Ar tikrai norite ištrinti Prjektą`)) {
+    axios.delete('http://localhost:3000/' + id)
+    .then(resp=>navigate('/pagrindinis'))
+    .catch(err=>console.log(err.message))
+    }
+  }
 
   return data && (
     <div className={'container ' + style.project_wraper}>
+      <div className={style.project_controls_wraper}>
+        <button
+          className="btn btn-primary"
+          onClick={() => navigate('/projektas/tvarkyti-projekta/' + id)}
+        >
+          Tvarkyti Projektą
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => {
+            handleDelete()
+          }}
+        >
+          Trinti projektą
+        </button>
+      </div>
 
       <table className='table table-striped'>
 
@@ -80,8 +102,8 @@ export default function SingleProject() {
       </table>
       {showChangeStatus &&
         <ChangeStatus
-        setShowChangeStatus={setShowChangeStatus} 
-        id={id}
+          setShowChangeStatus={setShowChangeStatus}
+          id={id}
         />
       }
     </div>

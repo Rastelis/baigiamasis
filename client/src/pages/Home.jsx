@@ -11,6 +11,7 @@ const Home = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/')
       .then(resp => setData(resp.data))
+      .catch(err=>console.log(err.message))
   }, []);
 
   console.dir(data);

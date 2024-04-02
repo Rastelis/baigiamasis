@@ -20,3 +20,11 @@
 .change_status:hover {
   background-color: #424649!important;
 }
+
+.project_controls_wraper{
+  padding: 10px 0;
+}
+
+.project_controls_wraper button:first-child {
+  margin-right: 10px;
+}

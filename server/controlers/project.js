@@ -53,13 +53,23 @@ router.put('/:id', async (req, resp) => {
     if (req.file) req.body.picture = req.file.filename;
 
     try {
-      await Project.updateOne(req.body)
+      await Project.findByIdAndUpdate(req.params.id, req.body, { runValidators: true })
       resp.status(200).json('Statusas sekmingai pakeistas');
     } catch (err) {
       resp.status(500).json(err);
     }
   });
 });
+
+// delete project
+router.delete('/:id', async (req, resp) => {
+  try {
+    await Project.findByIdAndDelete(req.params.id)
+    resp.status(200).json("Projektas Sekmingai ištrintas")
+  } catch (err) {
+    resp.status(500).json(err)
+  }
+})
 
 export default router;
 
