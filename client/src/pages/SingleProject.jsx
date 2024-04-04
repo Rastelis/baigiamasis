@@ -1,10 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 
 import Status from "../components/status/Status.jsx";
 import style from './SingleProject.module.css'
 import ChangeStatus from "../components/change_status/ChangeStatus.jsx";
+import MainContext from '../context/Main.jsx'
 
 
 export default function SingleProject() {
@@ -13,6 +14,7 @@ export default function SingleProject() {
   const navigate = useNavigate();
   // const [loading, setLoading] = useState(false);
   const { id } = useParams()
+  const { user, setMessage } = useContext(MainContext)
 
 
   useEffect(() => {
@@ -24,30 +26,53 @@ export default function SingleProject() {
   }, [showChangeStatus])
 
   function handleDelete() {
-    if (window.confirm(`Ar tikrai norite ištrinti Prjektą`)) {
-    axios.delete('http://localhost:3000/' + id)
-    .then(resp=>navigate('/pagrindinis'))
-    .catch(err=>console.log(err.message))
+    if (data.status === "Priimtas" || data.status === "Atmestas") setMessage('Projekto kurio statusas yra ' + data.status + ' ištrinti negalima')
+    else if (window.confirm(`Ar tikrai norite ištrinti Prjektą`)) {
+      // const authorValidate = axios.interceptors.request.use((req) => {
+      //   const controller = new AbortController();
+      //   if (user._id != data.author._id) {
+      //     navigate('/projektas/' + id);
+      //     setMessage('trinti projektą gali tik jį sukūrę vartotojai');
+      //     controller.abort();
+      //     axios.interceptors.request.eject(authorValidate);
+      //   }
+      //   return { signal: controller.signal }
+      //   return req;
+      // },
+      //   (err) => {
+      //     console.log(err);
+      //   }
+      // );
+      axios.delete('http://localhost:3000/' + id)
+        .then(resp => {
+          // axios.interceptors.request.eject(authorValidate);
+          navigate('/pagrindinis')
+        })
+      .catch(err => {
+        console.log(err)
+      })
     }
   }
 
   return data && (
     <div className={'container ' + style.project_wraper}>
       <div className={style.project_controls_wraper}>
-        <button
-          className="btn btn-primary"
-          onClick={() => navigate('/projektas/tvarkyti-projekta/' + id)}
-        >
-          Tvarkyti Projektą
-        </button>
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            handleDelete()
-          }}
-        >
-          Trinti projektą
-        </button>
+        {user._id === data.author._id &&
+          <><button
+            className="btn btn-primary"
+            onClick={() => navigate('/projektas/tvarkyti-projekta/' + id)}
+          >
+            Tvarkyti Projektą
+          </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                handleDelete()
+              }}
+            >
+              Trinti projektą
+            </button></>
+        }
       </div>
 
       <table className='table table-striped'>
@@ -61,12 +86,14 @@ export default function SingleProject() {
             <td><strong>Projekto statusas:</strong></td>
             <td>
               <Status data={data.status} />
-              <span
-                className={
-                  "bg-dark text-light " + style.change_status
-                }
-                onClick={() => setShowChangeStatus(true)}>Keisti Statusa
-              </span>
+              {user.addmin &&
+                <span
+                  className={
+                    "bg-dark text-light " + style.change_status
+                  }
+                  onClick={() => setShowChangeStatus(true)}>Keisti Statusa
+                </span>
+              }
             </td>
           </tr>
           <tr>
@@ -88,8 +115,7 @@ export default function SingleProject() {
           <tr>
             <td><strong>Projekto autorius:</strong></td>
             <td>
-              {data.author.name}
-              {data.author.surname}
+              {data.author.name} {data.author.surname}
             </td>
           </tr>
           <tr>

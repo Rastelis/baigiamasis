@@ -1,20 +1,30 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
+
+import MainContext from '../context/Main.jsx'
 
 export default function NewUser() {
 
   const navigate = useNavigate();
-  const [message, setMessage] = useState();
+  const [messageLocal, setMessageLocal] = useState();
+  const {user,setMessage} = useContext(MainContext)
+
+
+  useEffect(() => {
+    if (!user.addmin) {
+      console.log("should redirect")
+      setMessage('vartotojų nustatymai prieinami tik administratoriui')
+      navigate('/pagrindinis')
+    }
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
-    formData.append('author', '66016a3f4607f71f6b4f2a87')//temporary solution
     axios.post('http://localhost:3000/vartotojai', formData)
       .then(resp => navigate('/vartotojai'))
-      .catch(err => setMessage(err.response.data))
+      .catch(err => setMessageLocal(err.response.data))
 
   };
 
@@ -28,8 +38,8 @@ export default function NewUser() {
             id="new_user"
           >
             {
-              message &&
-              <div className="alert alert-danger">{message}</div>
+              messageLocal &&
+              <div className="alert alert-danger">{messageLocal}</div>
             }
             <div className="mb-3">
               <label

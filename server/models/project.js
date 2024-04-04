@@ -22,6 +22,7 @@ const Project = model('project', new Schema({
   hearing_at: {
     type: Date,
     required: [true, 'Nurodyti svarstymo datą yra privaloma'],
+    unique: [true, 'Svarstymo data jau užimta pasirinkite kita datą.'],
   },
   author: {
     type: Schema.Types.ObjectId,

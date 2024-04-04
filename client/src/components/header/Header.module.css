@@ -10,38 +10,20 @@ header {
 
 }
 
-.settings {
+.loggout {
   display: flex;
   align-items: center;
   justify-content: start;
-  position: relative;
+  width: 25px;
 }
 
-.settings_menu {
-  top: 0;
-  left: 0;
-  background-color: white;
-  border: 1px solid gray;
-  position: absolute;
-  width: 170px;
-}
-
-.menu_option {
-  padding: 10px;
-  transition: 0.5s;
-
-}
-.menu_option:hover {
-  background-color: rgb(221, 221, 221);
-}
-
-.settings i {
+.loggout i {
   --icon_size: 15px;
   font-size: 15px;
   transition: font-size 0.2s;
 }
 
-.settings i:hover {
+.loggout i:hover {
   font-size: 18px;
 }
 

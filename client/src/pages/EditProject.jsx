@@ -1,21 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 import style from './NewProject.module.css';
+import MainContext from '../context/Main.jsx'
+
 
 
 export default function NewProject() {
 
   const navigate = useNavigate();
-  const [message, setMessage] = useState();
+  const [messageLocal, setMessageLocal] = useState();
   const [data, setData] = useState();
   const { id } = useParams()
+  const { user, setMessage } = useContext(MainContext)
 
   useEffect(() => {
+    const authorValidate = axios.interceptors.response.use((resp) => {
+      if (user._id != resp.data.author._id) {
+        navigate('/projektas/' + id);
+        setMessage('Tvarkyti projektą gali tik jį sukūrę vartotojai');
+        axios.interceptors.response.eject(authorValidate);
+      }
+      return resp;
+    },
+      (err) => {
+        console.log(err);
+      }
+    );
     axios.get('http://localhost:3000/projektas/' + id)
-      .then(resp => setData(resp.data))
-      .catch(err => console.log(err.message))
+      .then(resp => {
+        axios.interceptors.response.eject(authorValidate);
+        setData(resp.data)
+      })
+      .catch(err => {
+
+        console.log(err.message)
+      })
   }, [])
 
   function handleSubmit(e) {
@@ -23,7 +44,7 @@ export default function NewProject() {
     const formData = new FormData(e.target);
     axios.put('http://localhost:3000/' + id, formData)
       .then(resp => navigate('/pagrindinis'))
-      .catch(err => setMessage(err.response.data))
+      .catch(err => setMessageLocal(err.response.data))
   };
 
   return data && (
@@ -36,8 +57,8 @@ export default function NewProject() {
             id="edit_project"
           >
             {
-              message &&
-              <div className="alert alert-danger">{message}</div>
+              messageLocal &&
+              <div className="alert alert-danger">{messageLocal}</div>
             }
             <div className="mb-3">
               <label

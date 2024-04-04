@@ -1,23 +1,34 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import style from './NewProject.module.css';
 import axios from 'axios';
+import MainContext from '../context/Main.jsx'
 
 export default function NewProject() {
 
   const navigate = useNavigate();
-  const [message, setMessage] = useState();
+  const [messageLocal, setMessageLocal] = useState();
+
+  const { user, setMessage } = useContext(MainContext)
+
+  useEffect(() => {
+    if (user.admin) {
+      console.log("should redirect")
+      setMessage('administratorius negali kurti Projektų')
+      navigate('/pagrindinis')
+    }
+  });
 
   function handleSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.append('author', '66016a3f4607f71f6b4f2a87')//temporary solution
-    axios.post('http://localhost:3000', formData)
-      .then(resp => navigate('/pagrindinis'))
-      .catch(err => setMessage(err.response.data))
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      formData.append('author', user._id)
+      axios.post('http://localhost:3000', formData)
+        .then(resp => navigate('/pagrindinis'))
+        .catch(err => setMessageLocal(err.response.data))
 
-  };
+    };
 
   return (
     <div>
@@ -29,8 +40,8 @@ export default function NewProject() {
             id="new_project"
           >
             {
-              message &&
-              <div className="alert alert-danger">{message}</div>
+              messageLocal &&
+              <div className="alert alert-danger">{messageLocal}</div>
             }
             <div className="mb-3">
               <label
@@ -74,7 +85,7 @@ export default function NewProject() {
                 name='hearing_at'
                 id='hearing_at'
               />
-            {/* <div className='form-text'>svarstymo data turi būti nurodyta.</div> */}
+              {/* <div className='form-text'>svarstymo data turi būti nurodyta.</div> */}
             </div>
             <div className="mb-3">
               <label
@@ -89,7 +100,7 @@ export default function NewProject() {
                 name="picture"
                 id="picture"
               />
-            {/* <div className='form-text'>Įkelti nuotrauką yra privaloma</div> */}
+              {/* <div className='form-text'>Įkelti nuotrauką yra privaloma</div> */}
             </div>
           </form>
           <button

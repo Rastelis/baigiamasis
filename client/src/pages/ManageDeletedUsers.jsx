@@ -1,23 +1,40 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
 import DeletedUser from "../components/deleted_user/DeletedUser";
 import style from './UserManagmet.module.css'
+import MainContext from '../context/Main.jsx'
 
 
 export default function ManageDeletedUsers() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [userLoader, setUserLoader] = useState(false)
+  const { user, setMessage } = useContext(MainContext)
 
   useEffect(() => {
+    const adminValidate = axios.interceptors.request.use((req) => {
+      if (!user.addmin) {
+        navigate('/pagrindinis');
+        axios.interceptors.request.eject(adminValidate);
+      };
+      return req;
+    },
+      (err) => {
+        console.log(err);
+      }
+    );
     axios.get('http://localhost:3000/vartotojai')
       .then(resp => {
-        const filteredData = resp.data.filter((user) => !user.active_user)
-        setData(filteredData)
+        const filteredData = resp.data.filter((user) => !user.active_user);
+        setData(filteredData);
+        axios.interceptors.request.eject(adminValidate);
       })
-      .catch(err => console.log(err.message))
+      .catch(err => {
+        if (err.response.status === 401) setMessage('vartotojų nustatymai prieinami tik administratoriui');
+        console.log(err.message);
+      })
 
 
     console.log('loading');

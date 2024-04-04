@@ -18,11 +18,11 @@ export default function Project({ data }) {
         <div>
           <div>
             <strong>Autorius: </strong>
-            <p>{data.author.name} {data.author.surname}</p>
+            <p>{data.author?.name} {data.author?.surname}</p>
           </div>
           <div>
             <strong>Partija: </strong>
-            <p>{data.author.party_name}</p>
+            <p>{data.author?.party_name}</p>
           </div>
         </div>
         <div>

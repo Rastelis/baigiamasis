@@ -31,34 +31,6 @@ const User = model('user', new Schema({
   },
   password: {
     type: String,
-    minLength: [8, 'Slaptažodis yra per trumpas, slaptažodis negal būti trumpesnis nei 8 simboliai.'],
-    maxLength: [80,'Slaptažodis yra perilgas, spatažodis negali buti ilgesnis nei 80 simbolių'],
-    validate: [
-      {
-        validator: function (v) {
-          return /[0-9]/.test(v);
-        },
-        message: 'Slaptažodis turi turėti bent vieną simbolį.'
-      },
-      {
-        validator: function (v) {
-          return /[A-Z]/.test(v);
-        },
-        message: 'Slaptažodis turi turėti bent vieną didžiają raidę.'
-      },
-      {
-        validator: function (v) {
-          return /[a-z]/.test(v);
-        },
-        message: 'Slaptažodis turi turėti bent vieną mažają raidę.'
-      },
-      {
-        validator: function (v) {
-          return /[#?!@$ %^&*-.+=]/.test(v);
-        },
-        message: 'slaptažodis turi turėti bent viena simbolį.'
-      }
-    ]
   },
   created_at: {
     type: Date,

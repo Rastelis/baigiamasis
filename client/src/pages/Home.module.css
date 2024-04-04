@@ -8,3 +8,22 @@
   background-color: rgb(215, 215, 215);
   padding: 20px 0;
 }
+
+.sort_projects_container {
+  margin: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .projects {
+  grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 426px) {
+  .projects {
+  grid-template-columns: 1fr;
+  }
+  .project_display_controls {
+    flex-direction: column;
+  }
+}

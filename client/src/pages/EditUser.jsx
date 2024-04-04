@@ -1,19 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import MainContext from '../context/Main.jsx'
 
 export default function NewUser() {
 
   const navigate = useNavigate();
-  const [message, setMessage] = useState();
+  const [messageLocal, setMessageLocal] = useState();
   const [data, setData] = useState();
   const { id } = useParams();
+  const { user, setMessage } = useContext(MainContext)
 
   useEffect(() => {
+    const adminValidate = axios.interceptors.request.use((req) => {
+      if (!user.addmin) {
+        navigate('/pagrindinis')
+        axios.interceptors.request.eject(adminValidate);
+      };
+      return req;
+    },
+      (err) => {
+        console.log(err);
+      }
+    );
     axios.get('http://localhost:3000/vartotojai/' + id)
-      .then(resp => setData(resp.data))
-      .catch(err => console.log(err.message))
+      .then(resp => {
+        setData(resp.data)
+        axios.interceptors.response.eject(adminValidate);
+      })
+      .catch(err => {
+        if (err.response.status === 401) setMessage('vartotojų nustatymai prieinami tik administratoriui');
+        console.log(err)
+      })
   }, [])
 
   function handleSubmit(e) {
@@ -21,7 +40,7 @@ export default function NewUser() {
     const formData = new FormData(e.target);
     axios.put('http://localhost:3000/vartotojai/' + id, formData)
       .then(resp => navigate('/vartotojai'))
-      .catch(err => setMessage(err.response.data))
+      .catch(err => setMessageLocal(err.response.data))
 
   };
 
@@ -35,8 +54,8 @@ export default function NewUser() {
             id="edit_user"
           >
             {
-              message &&
-              <div className="alert alert-danger">{message}</div>
+              messageLocal &&
+              <div className="alert alert-danger">{messageLocal}</div>
             }
             <div className="mb-3">
               <label

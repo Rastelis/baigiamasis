@@ -12,7 +12,7 @@ export default function ChangeStatus({ setShowChangeStatus, id }) {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    axios.put('http://localhost:3000/' + id, formData)
+    axios.put('http://localhost:3000/keisti-statusa/' + id, formData)
       .then(resp => setShowChangeStatus(false))
       .catch(err => {
         // setMessage(err.response.data)

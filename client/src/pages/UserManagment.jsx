@@ -1,25 +1,50 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 
 import User from "../components/user/User";
 import style from './UserManagmet.module.css'
+import MainContext from '../context/Main.jsx'
 
 
 export default function UserManagment() {
-  const [data, setData] = useState([]);
+  const { user, setMessage } = useContext(MainContext);
   const navigate = useNavigate();
-  const [userLoader, setUserLoader] = useState(false)
-  const [message, setMessage] = useState();
+
+  const [data, setData] = useState([]);
+  const [userLoader, setUserLoader] = useState(false);
+  const [messageLocal, setMessageLocal] = useState();
+
+
 
   useEffect(() => {
+    const adminValidate = axios.interceptors.request.use((req) => {
+      if (!user.addmin) {
+        navigate('/pagrindinis')
+        axios.interceptors.request.eject(adminValidate);
+      };
+      return req;
+    },
+      (err) => {
+        console.log(err);
+      }
+    );
     axios.get('http://localhost:3000/vartotojai')
       .then(resp => {
-        const filteredData = resp.data.filter((user) => user.active_user)
-        setData(filteredData)
+        const filteredData = resp.data.filter((user) => user.active_user);
+        setData(filteredData);
+        axios.interceptors.response.eject(adminValidate);
       })
-      .catch(err => console.log(err.message))
+      .catch(err => {
+        if (err.response.status === 401) setMessage('vartotojų nustatymai prieinami tik administratoriui');
+        else console.log(err.message);
+      })
 
+    // if (!user.addmin)
+    //   return (
+    //     setMessage("Vartotojų nustatymai prieinami tik admnistratoriui")
+    //     // navigate('/pagrindinis')
+    //   );
 
     console.log('loading');
   }, [userLoader])
@@ -32,8 +57,8 @@ export default function UserManagment() {
           <button
             className=" btn btn-primary"
             onClick={() => {
-              if (data.length < 3) navigate('/vartotojai/naujas-vartotojas')
-              else setMessage("Maksimalus aktyvių vartotojų skaičius pasiektas.")
+              if (data.length < 4) navigate('/vartotojai/naujas-vartotojas')
+              else setMessageLocal("Maksimalus aktyvių vartotojų skaičius pasiektas.")
             }}
           >
             Prideti naują vartotją
@@ -45,10 +70,10 @@ export default function UserManagment() {
             Pašalinti vartotojai
           </button>
         </div>
-            {
-              message &&
-              <div className="alert alert-danger">{message}</div>
-            }
+        {
+          messageLocal &&
+          <div className="alert alert-danger">{messageLocal}</div>
+        }
         <div className={style.user_table_container}>
           <table className="table table-hover">
             <thead>
