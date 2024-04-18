@@ -1,0 +1,10 @@
+.title {
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.login_test {
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 10px;
+}

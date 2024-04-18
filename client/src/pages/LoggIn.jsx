@@ -3,6 +3,8 @@ import MainContext from '../context/Main.jsx'
 import { useContext, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 
+import style from './Loggin.module.css'
+
 
 
 export default function LoggIn() {
@@ -11,7 +13,7 @@ export default function LoggIn() {
   const navigate = useNavigate()
 
   if (user) {
-    console.log("should redirect")
+    // console.log("should redirect")
     navigate('/pagrindinis')
   }
 
@@ -34,6 +36,9 @@ export default function LoggIn() {
   return (
     <div>
       <div className="container">
+        <div className="d-flex justify-content-center pt-5">
+          <div className={style.title}>Parlamento Projetų Tvarkyklė</div>
+        </div>
         <div className="row d-flex justify-content-center">
           <div className="col-5">
             <form
@@ -83,6 +88,17 @@ export default function LoggIn() {
               >
                 Prisijungti
               </button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="d-flex align-items-center flex-column pt-5 ">
+            <div className={style.login_test}>
+              <p>Vartotojai aplikacijos testavimui</p>
+              <p>Seimo Pirmininkas: Jonas.P@mail.lt</p>
+              <p>Seimo narys: T.Gladkevicius@mail.com</p>
+              <p>slaptažodis: 12345Aa@</p>
             </div>
           </div>
         </div>
